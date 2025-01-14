@@ -33,6 +33,14 @@ public class ErrorHandler {
         return buildErrorResponse(e, HttpStatus.CONFLICT, "Incorrectly made request.");
     }
 
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public Map<String, String> handleSensorNotFound(final SensorNotFoundException e, WebRequest request) {
+        log.error("Ошибка 404 NotFoundException: {} в запросе {}",
+                e.getMessage(), request.getDescription(false));
+        return buildErrorResponse(e, HttpStatus.NOT_FOUND, e.getReason());
+    }
+
     public Map<String, String> buildErrorResponse(Exception e, HttpStatus status, String reason) {
         Map<String, String> response = new LinkedHashMap<>();
         response.put("status", status.name());

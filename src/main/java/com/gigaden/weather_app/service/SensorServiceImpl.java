@@ -3,6 +3,7 @@ package com.gigaden.weather_app.service;
 import com.gigaden.weather_app.dto.SensorCreateDto;
 import com.gigaden.weather_app.dto.SensorResponseDto;
 import com.gigaden.weather_app.entity.Sensor;
+import com.gigaden.weather_app.exception.SensorNotFoundException;
 import com.gigaden.weather_app.exception.SensorValidationException;
 import com.gigaden.weather_app.mapper.SensorMapper;
 import com.gigaden.weather_app.repository.SensorRepository;
@@ -30,7 +31,21 @@ public class SensorServiceImpl implements SensorService {
         Sensor sensor = SensorMapper.mapToSensorFromDto(dto);
         sensorRepository.save(sensor);
         log.info("Новый сенсор добавлен {}", sensor);
+
         return SensorMapper.mapToResponseDtoFromSensor(sensor);
+    }
+
+    @Override
+    public Sensor getByName(String name) {
+        log.info("Пытаюсь получить сенсор с именем = {}", name);
+         Sensor sensor = sensorRepository.findSensorByName(name)
+                 .orElseThrow(() -> {
+                     log.warn("Попытка получить сенсор с несуществующим именем {}", name);
+                     return new SensorNotFoundException(String.format("Сенсор %s не найден", name));
+                 });
+        log.info("Сенсор с именем = {} получен", name);
+
+        return sensor;
     }
 
     // Чекаем имя сенсора. По идее, лучше сделать отдельный класс Validator и туда вынести проверки,

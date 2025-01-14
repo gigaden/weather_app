@@ -28,6 +28,6 @@ public class SensorController {
     @PostMapping("/registration")
     public ResponseEntity<SensorResponseDto> addSensor(@Valid @RequestBody SensorCreateDto dto) {
         SensorResponseDto sensorResponseDto = sensorService.createSensor(dto);
-        return new ResponseEntity<>(sensorResponseDto, HttpStatus.OK);
+        return new ResponseEntity<>(sensorResponseDto, HttpStatus.CREATED);
     }
 }

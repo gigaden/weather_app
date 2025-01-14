@@ -35,12 +35,12 @@ public class Measurement {
     private double value;
 
     @Column(name = "raining")
-    @NotBlank
+    @NotNull
     private boolean raining;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sensor_id")
-    @NotBlank
+    @NotNull
     private Sensor sensor;
 
     @Column(name = "created_on")
