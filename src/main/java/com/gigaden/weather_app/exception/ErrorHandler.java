@@ -10,6 +10,7 @@ import org.springframework.web.context.request.WebRequest;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -39,6 +40,22 @@ public class ErrorHandler {
         log.error("Ошибка 404 NotFoundException: {} в запросе {}",
                 e.getMessage(), request.getDescription(false));
         return buildErrorResponse(e, HttpStatus.NOT_FOUND, e.getReason());
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public Map<String, String> handleNotFound(final ClientRequestException e, WebRequest request) {
+        log.error("Ошибка клиента: {} в запросе {}",
+                e.getMessage(), request.getDescription(false));
+        return buildErrorResponse(e, HttpStatus.NOT_FOUND, e.getReason());
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public Map<String, String> handleNotFound(final ServerRequestException e, WebRequest request) {
+        log.error("Ошибка сервера: {} в запросе {}",
+                e.getMessage(), request.getDescription(false));
+        return buildErrorResponse(e, HttpStatus.INTERNAL_SERVER_ERROR, e.getReason());
     }
 
     public Map<String, String> buildErrorResponse(Exception e, HttpStatus status, String reason) {
