@@ -27,7 +27,7 @@ public class WeatherClientService {
         - Выполняет `GET /measurements`, чтобы получить все 1000 записанных измерений.
     */
     public Collection<MeasurementResponseDto> makeAndGetRandomMeasurements() {
-        SensorCreateDto sensor =  weatherClient.createSensor(SensorCreateDto.builder().name("RandomSensor").build());
+        SensorCreateDto sensor = weatherClient.createSensor(SensorCreateDto.builder().name("RandomSensor").build());
 
         Random rnd = new Random();
 
