@@ -30,7 +30,8 @@ git clone https://github.com/your-username/weather-sensor-api.git
 cd weather-sensor-api
 
 ## 2. Запуск с использованием Docker Compose
-docker-compose up --build
+собираем проект через **mvn clean package**
+поднимаем контейнеры через **docker compose up**
 Это запустит:
 
 Spring Boot приложение в контейнере с портом 8080.
