@@ -6,19 +6,24 @@ import com.gigaden.weather_app.dto.SensorCreateDto;
 import com.gigaden.weather_app.service.MeasurementService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.util.Arrays;
 import java.util.Collection;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
+@ExtendWith(MockitoExtension.class)
+@ActiveProfiles("test")
 class MeasurementControllerTest {
 
     @Mock
@@ -29,12 +34,10 @@ class MeasurementControllerTest {
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.openMocks(this); // Инициализация моков перед каждым тестом
     }
 
     @Test
     void testGetAllMeasurements() {
-        // Создаем тестовые данные
         MeasurementResponseDto measurement1 = MeasurementResponseDto.builder()
                 .id(1L)
                 .value(25.5)
@@ -49,13 +52,10 @@ class MeasurementControllerTest {
                 .sensorId(102L)
                 .build();
 
-        // Задаем поведение для мока
         when(measurementService.getAllMeasurements()).thenReturn(Arrays.asList(measurement1, measurement2));
 
-        // Вызываем тестируемый метод
         ResponseEntity<Collection<MeasurementResponseDto>> response = measurementController.getAllMeasurements();
 
-        // Проверяем результат
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(2, response.getBody().size());
         verify(measurementService, times(1)).getAllMeasurements();
@@ -63,7 +63,6 @@ class MeasurementControllerTest {
 
     @Test
     void testAddMeasurement() {
-        // Создаем тестовые данные
         SensorCreateDto sensorDto = SensorCreateDto.builder()
                 .name("Test Sensor")
                 .build();
@@ -81,29 +80,23 @@ class MeasurementControllerTest {
                 .sensorId(101L)
                 .build();
 
-        // Задаем поведение для мока
         when(measurementService.createMeasurement(createDto)).thenReturn(responseDto);
 
-        // Вызываем тестируемый метод
         ResponseEntity<MeasurementResponseDto> response = measurementController.addMeasurement(createDto);
 
-        // Проверяем результат
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
         assertEquals(20.0, response.getBody().getValue());
-        assertTrue(response.getBody().isRaining());
+        assertEquals(true, response.getBody().isRaining());
         assertEquals(101L, response.getBody().getSensorId());
         verify(measurementService, times(1)).createMeasurement(createDto);
     }
 
     @Test
     void testGetRainyDays() {
-        // Задаем поведение для мока
         when(measurementService.getRainyDays()).thenReturn(5);
 
-        // Вызываем тестируемый метод
         ResponseEntity<Integer> response = measurementController.getRainyDays();
 
-        // Проверяем результат
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(5, response.getBody());
         verify(measurementService, times(1)).getRainyDays();

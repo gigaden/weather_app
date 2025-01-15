@@ -1,6 +1,17 @@
-version: '3.8'
-
 services:
+  weather-server:
+    build: .
+    image: weather
+    container_name: weather
+    ports:
+      - "8080:8080"
+    depends_on:
+      weather-db:
+        condition: service_healthy
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://weather-db:5432/weather
+      - SPRING_DATASOURCE_USERNAME=main
+      - SPRING_DATASOURCE_PASSWORD=main
   weather-db:
     image: postgres:16.1
     container_name: postgres-weather
