@@ -38,11 +38,11 @@ public class SensorServiceImpl implements SensorService {
     @Override
     public Sensor getByName(String name) {
         log.info("Пытаюсь получить сенсор с именем = {}", name);
-         Sensor sensor = sensorRepository.findSensorByName(name)
-                 .orElseThrow(() -> {
-                     log.warn("Попытка получить сенсор с несуществующим именем {}", name);
-                     return new SensorNotFoundException(String.format("Сенсор %s не найден", name));
-                 });
+        Sensor sensor = sensorRepository.findSensorByName(name)
+                .orElseThrow(() -> {
+                    log.warn("Попытка получить сенсор с несуществующим именем {}", name);
+                    return new SensorNotFoundException(String.format("Сенсор %s не найден", name));
+                });
         log.info("Сенсор с именем = {} получен", name);
 
         return sensor;
